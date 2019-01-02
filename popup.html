@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <style>
+        body {
+          width: 700px;
+          height: 600px;
+        }
+        #wrapper {
+          margin-top: 15px;
+          background-color: #D8E0E4;
+        }
+        #writeSection {
+          width: 340px;
+          display:grid;
+          grid-template-columns: 1fr 5fr;
+          grid-row: 1/2;
+          float:left;
+          position: fixed;
+        }
+        #addEditTabs {
+          grid-column: 2/3;
+          margin-bottom: 5px;
+          margin-top: 18px;
+        }
+
+        #addEditTabs p {
+          text-align: center;
+        }
+
+        #addTab, #updateTab {
+          width: 47%;
+          display: inline-block;
+          border-radius: 3px;
+          background-color: #DCDAE4;
+          font-weight: bold;
+          font-family: Verdana;
+        }
+
+        #addTab {
+          cursor: pointer;
+        }
+        #updateTab {
+          cursor: default;
+          float: right;
+        }
+
+
+        .uniqueDiv {
+            display:none;
+        }
+
+        input[name="blurbCategory"], input[name="blurbTitle"], textarea[name="paragraphText"] {
+          background-color: #EFF5E6;
+          margin-bottom: 5px;
+          font-size: 14px;
+        }
+
+        #addText, #updateText, #deleteText {
+          width: 70px;
+          height: 30px;
+        }
+        #addText {
+          display: inline-block;
+        }
+        #deleteText {
+          display: inline-block;
+          float: right;
+        }
+
+        .hideButton {
+          display: none !important;
+        }
+
+
+        #addUpdateButton {
+          grid-column: 2/3;
+        }
+
+        #deleteDB {
+          float: right;
+        }
+        #displaySection {
+          float: right;
+          width: 340px;
+        }
+
+        .displayBlurbCategory {
+
+        }
+        .categoryTitle {
+          padding-left: 10px;
+          padding-top:3px;
+          font-weight:bold;
+          font-family: Verdana;
+          text-align:left;
+        }
+
+        .displayBlurb {
+          display:inline-block;
+          width: 90%;
+          text-overflow: ellipsis;
+          margin: 3px;
+          background-color: #DCDAE4;
+          border-radius:3px;
+        }
+        .displayBlurb p {
+          display: inline-block;
+          float: left;
+          padding: 3px;
+          font-family: Verdana;
+        }
+        .displayBlurb:hover {
+          background-color: #B9B6CA;
+          cursor: pointer;
+        }
+        .active, .activeBlurb {
+          background-color: #B5C1D6 !important;
+          font-weight: bold;
+        }
+        .hideConfirm {
+          top: 5px;
+          opacity: 0.8;
+          left: 320px;
+          width: 80px;
+          border-radius: 10px;
+          height: 20px;
+          background-color: #A9E5BB;
+          display: none;
+          position: absolute;
+          border: 1px solid black;
+          position: fixed;
+        }
+
+        .hideConfirm p, .hideError p, .hideDuplicate p {
+          font-family: Helvetica;
+          font-size: 14px;
+          font-weight: bold;
+          text-align:center;
+          margin-top: 2px;
+        }
+        .hideError, .hideDuplicate {
+          top: 5px;
+          left: 300px;
+          width: 180px;
+          border-radius: 10px;
+          height: 20px;
+          background-color: #F5766A;
+          display: none;
+          position: absolute;
+          border: 1px solid black;
+          position: fixed;
+        }
+
+        .showConfirm, .showError {
+          display: block;
+        }
+
+
+      </style>
+    </head>
+    <body>
+
+      <div id="wrapper">
+        <div class="hideConfirm"></div>
+        <div class="hideError">
+          <p>Don't leave empty fields</p>
+        </div>
+        <div class="hideDuplicate">
+          <p>Duplicate title</p>
+        </div>
+        <div id="writeSection">
+          <div id="addEditTabs">
+            <div id="addTab" class="active"><p>New Template</p></div>
+            <div id="updateTab" title="Choose one of the texts to edit"><p>Update</p></div>
+          </div>
+
+            <p>Category:</p> <input type="text" name="blurbCategory">
+            <p>Title:</p> <input type="text" name="blurbTitle">
+            <p>Text:</p> <textarea name="paragraphText" cols="50" rows="20"></textarea>
+          <div id="addUpdateButton">
+            <button id="addText">ADD</button>
+            <button id="updateText" class="hideButton">UPDATE</button>
+            <button id="deleteText" class="hideButton">DELETE</button>
+
+          </div>
+        </div>
+        <div id="displaySection">
+          Blurbs will be displayed here
+        </div>
+      </div>
+    </body>
+    <script src="./popup.js">
+    </script>
+  </html>
