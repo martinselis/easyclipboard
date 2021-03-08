@@ -1,51 +1,52 @@
-var tempContext;
-
-chrome.storage.onChanged.addListener(getMenus)
-
-// Pull menu items from DB
-function getMenus() {
-  chrome.storage.sync.get(['blurbs'], function(resultDB) {
-    try {
-      var uniqueCategories = unique(resultDB["blurbs"], "category");
-      setMenus(uniqueCategories, resultDB)
-    } catch {
-      uniqueCategories = ['empty'];
-    }
-  })
+//debugging
+function log(logInfo, data) {
+  chrome.extension.getBackgroundPage().console.log(logInfo, data);
 }
 
-getMenus()
+// Pull menu items from DB and sets menus on db change
+chrome.storage.onChanged.addListener(getMenus);
+function getMenus() {
+  dbGetFacade("blurbs", function (resultDB) {
+    try {
+      const uniqueCategories = unique(resultDB["blurbs"], "category");
+      setMenus(uniqueCategories, resultDB);
+    } catch {
+      uniqueCategories = ["empty"];
+    }
+  });
+}
+
+getMenus();
 
 // Set menu items on right click
 function setMenus(uniqueCategories, resultDB) {
-chrome.contextMenus.removeAll(function() {
-  tempContext = [];
-      for (let i = 0; i < uniqueCategories.length; i++) {
-        var contextItem = {
-          "id": uniqueCategories[i],
-          "title": uniqueCategories[i],
-          "contexts": ["editable", "selection"],
-          }
-        chrome.contextMenus.create(contextItem)
-        resultDB["blurbs"].forEach(function(element) {
-          if(element["category"] == uniqueCategories[i]) {
-            var titleContextItem = {
-            "id": uniqueCategories[i] + ":" + element["title"],
-            "title": element["title"],
-            "parentId": uniqueCategories[i],
-            "contexts": ["editable", "selection"],
-            }
-            tempContext.push(titleContextItem)
-            try {
-            chrome.contextMenus.create(titleContextItem)
-          } catch(err){
+  chrome.contextMenus.removeAll(function () {
+    for (let i = 0; i < uniqueCategories.length; i++) {
+      const contextItem = {
+        id: uniqueCategories[i],
+        title: uniqueCategories[i],
+        contexts: ["editable", "selection"],
+      };
 
-          }
-          }
-        })
-      }
-  })
-      addListeners()
+      chrome.contextMenus.create(contextItem);
+
+      resultDB["blurbs"].forEach(function (element) {
+        if (element["category"] == uniqueCategories[i]) {
+          const titleContextItem = {
+            id: uniqueCategories[i] + ":" + element["title"],
+            title: element["title"],
+            parentId: uniqueCategories[i],
+            contexts: ["editable", "selection"],
+          };
+
+          try {
+            chrome.contextMenus.create(titleContextItem);
+          } catch (err) {}
+        }
+      });
+    }
+  });
+  addListeners();
 }
 //  Add listener to menu click
 
