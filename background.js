@@ -56,34 +56,43 @@ function addListeners() {
 }
 
 function clickListener(clickData) {
-  for (let menuItem = 0; menuItem < tempContext.length; menuItem++) {
-    if (clickData.menuItemId === tempContext[menuItem]["id"]) {
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {greeting: tempContext[menuItem]["id"]}, function(response) {
-        })
-      })
-    }
-  }
+  const [categoryClick, titleClick] = clickData.menuItemId.split(":");
+
+  dbGetFacade("blurbs", (result) => {
+    const correctBlurb = result.blurbs.find((blurb) => {
+      return blurb.category === categoryClick && blurb.title === titleClick;
+    });
+
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { blurb: correctBlurb.blurb },
+        function (response) {}
+      );
+    });
+  });
 }
 
 // Identify unique categories for menu options
 function unique(array, propertyName) {
-  var uniqueCat = []
-    var filteredObjects = array.filter((e, i) => array.findIndex(a => a[propertyName] === e[propertyName]) === i);
-    filteredObjects.forEach(function(element) {
-      uniqueCat.push(element["category"])
-    })
-    return uniqueCat
+  const uniqueCat = [];
+  const filteredObjects = array.filter(
+    (e, i) => array.findIndex((a) => a[propertyName] === e[propertyName]) === i
+  );
+  filteredObjects.forEach(function (element) {
+    uniqueCat.push(element["category"]);
+  });
+  return uniqueCat;
 }
 
-
-
 // Enable popup window
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-      chrome.declarativeContent.onPageChanged.addRules([{
+chrome.runtime.onInstalled.addListener(function () {
+  chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
+    chrome.declarativeContent.onPageChanged.addRules([
+      {
         conditions: [new chrome.declarativeContent.PageStateMatcher()],
-            actions: [new chrome.declarativeContent.ShowPageAction()]
-      }]);
-    });
+        actions: [new chrome.declarativeContent.ShowPageAction()],
+      },
+    ]);
   });
+});
